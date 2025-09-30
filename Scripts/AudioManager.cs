@@ -44,6 +44,11 @@ public class AudioManager : MonoBehaviour
     public GameObject loadProjectMenu;
     public GameObject loadLyricsMenu;
 
+    [Header("Lyric Setup Info")]
+    public GameObject indexTimeObj;
+    public Transform indexTimeHolder;
+    public RectTransform contentLyricHolder;
+
     void Awake()
     {
         if (instance == null)
@@ -94,6 +99,11 @@ public class AudioManager : MonoBehaviour
         mainMenu.SetActive(currentMenu == Menus.Options);
         loadProjectMenu.SetActive(currentMenu == Menus.LoadProject);
         loadLyricsMenu.SetActive(currentMenu == Menus.Lyrics);
+
+        if (currentMenu == Menus.Lyrics)
+        {
+            UpdateLyricTab();
+        }
     }
 
     //Display Option Info
@@ -219,6 +229,73 @@ public class AudioManager : MonoBehaviour
         return go != null && go.GetComponent<InputField>() != null;
     }
 
+    void LyricTabSetup()
+    {
+        //Clear Index Time and Dashes
+        for(int i = indexTimeHolder.childCount - 1; i >= 0; i--)
+        {
+            Destroy(indexTimeHolder.GetChild(i).gameObject);
+        }
+
+        //Set up Index Time and Dashes
+        //based on total number or seconds with a Short Dash for each 20 milli-seconds
+        //(5 total first being triple) with triple dashes on each second
+        int tS = Mathf.CeilToInt(audioLength);
+
+        for (int i = 0; i <= tS; i++)
+        {
+            TimeSpan cTime = TimeSpan.FromSeconds(i);
+
+            //Create Seconds Index
+            GameObject iTime = Instantiate(indexTimeObj,indexTimeHolder) as GameObject;
+
+            Text iText = iTime.GetComponent<Text>();
+
+            if(iText != null)
+            {
+                iText.text = cTime.ToString(@"hh\:mm\:ss") + "---";
+            }
+
+            if (i < tS)
+            {
+                //Create Milli-Second Dashes
+                for(int r = 0; r < 4; r++)
+                {
+                    GameObject dTime = Instantiate(indexTimeObj, indexTimeHolder) as GameObject;
+
+                    Text dText = dTime.GetComponent<Text>();
+
+                    if (dText != null)
+                    {
+                        dText.text = "--";
+                    }
+                }
+            }
+        }
+    }
+
+    void UpdateLyricTab()
+    {
+        CurrentProject(out VisualizerProject cP);
+
+        //Adjust content size
+        float iTHRT = indexTimeHolder.GetComponent<RectTransform>().sizeDelta.y;
+        if(iTHRT <= 0)
+        {
+            //Add a button to add audio
+            contentLyricHolder.sizeDelta = new Vector2(contentLyricHolder.sizeDelta.x, 50);
+
+        }
+        else
+        {
+            contentLyricHolder.sizeDelta = new Vector2(contentLyricHolder.sizeDelta.x, iTHRT + 10);
+        }
+
+        if (cP != null)
+        {
+        }
+    }
+
     #region Audio Source Actions
     public void OpenAudio()
     {
@@ -250,6 +327,7 @@ public class AudioManager : MonoBehaviour
                 string fileName = path.Substring(lastSlash + 1);
 
                 LoadInAudioData(path, pathPlaying, fileName, DownloadHandlerAudioClip.GetContent(www),autoStartPlay);
+                LyricTabSetup();
             }
         }
     }
