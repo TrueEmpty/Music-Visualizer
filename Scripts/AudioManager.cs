@@ -13,7 +13,7 @@ public class AudioManager : MonoBehaviour
     FileBrowser fileBrowser;
     public string lastPath;
     AudioClip audioClip;
-    AudioSource audioSource;
+    public AudioSource audioSource;
     public InputField projectName;
     public Text currentAudio;
     public Text currentAudioLength;
@@ -48,6 +48,13 @@ public class AudioManager : MonoBehaviour
     public GameObject indexTimeObj;
     public Transform indexTimeHolder;
     public RectTransform contentLyricHolder;
+    public GameObject wordDisplay;
+    public InputField bulkLyrics;
+    public Transform lyricHolder;
+
+    [Header("Icon Setup Info")]
+    public Transform texturesHolder;
+    public GameObject iconDisplay;
 
     void Awake()
     {
@@ -215,6 +222,14 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void ChangeBulkLyrics()
+    {
+        if (CurrentProject(out VisualizerProject cP))
+        {
+
+        }
+    }
+
     public void ChangeTitleName()
     {
         if (CurrentProject(out VisualizerProject cP))
@@ -293,6 +308,17 @@ public class AudioManager : MonoBehaviour
 
         if (cP != null)
         {
+        }
+    }
+
+    public void LoadWordDisplay(LyricLine lL)
+    {
+        GameObject go = Instantiate(wordDisplay, lyricHolder);
+
+        WordManager wm = go.GetComponent<WordManager>();
+        if (wm != null)
+        {
+            wm.lyricLine = lL;
         }
     }
 
@@ -465,6 +491,71 @@ public class AudioManager : MonoBehaviour
     }
     #endregion
 
+    #region Icon Actions
+    public void OpenIcon()
+    {
+        string aPath = fileBrowser.OpenFile(lastPath, ".png", ".jpg", ".jpeg");
+
+        if (!string.IsNullOrEmpty(aPath))
+        {
+            TexturePrint nTP = LoadInIconData(aPath);
+            StartCoroutine(LoadIcon(nTP));
+        }
+    }
+
+    private IEnumerator LoadIcon(TexturePrint tP)
+    {
+        yield return new WaitForEndOfFrame();
+
+        string path = tP.texture;
+        string url = "file://" + path;
+        using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(url))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Texture load failed: " + www.error);
+            }
+            else
+            {
+                int lastSlash = path.LastIndexOf('\\');
+                string pathPlaying = path[..lastSlash];
+                string fileName = path.Substring(lastSlash + 1);
+
+                Texture2D tex = DownloadHandlerTexture.GetContent(www);
+                tP.image = tex;
+
+                CreateIcon(tP);
+            }
+        }
+    }
+
+    void CreateIcon(TexturePrint tP)
+    {
+        GameObject go = Instantiate(iconDisplay, texturesHolder);
+
+        IconManager im = go.GetComponent<IconManager>();
+        if (im != null)
+        {
+            im.texturePrint = tP;
+        }
+    }
+
+    public TexturePrint LoadInIconData(string path)
+    {
+        if (!CurrentProject(out VisualizerProject ncP))
+        {
+            projects.Add(new VisualizerProject());
+            currentProject = projects.Count - 1;
+        }
+
+        CurrentProject(out VisualizerProject cP);
+        TexturePrint result = new TexturePrint(path);
+        cP.textures.Add(result);
+        return result;
+    }
+    #endregion
 
     private void OnApplicationQuit()
     {
@@ -506,6 +597,22 @@ public class AudioManager : MonoBehaviour
             if (cP.title != null)
             {
                 titleName.text = cP.title;
+            }
+
+            if (cP.lyrics.Count > 0)
+            {
+                for (int i = 0; i < cP.lyrics.Count; i++)
+                {
+                    //Create a word Display
+                }
+            }
+
+            if (cP.textures.Count > 0)
+            {
+                for (int i = 0; i < cP.textures.Count; i++)
+                {
+                    StartCoroutine(LoadIcon(cP.textures[i]));
+                }
             }
 
             if (cP.fullPath != null)
