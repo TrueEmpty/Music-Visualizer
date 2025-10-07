@@ -10,6 +10,10 @@ public class IconManager : MonoBehaviour
 
     AudioManager audioManager;
     public TexturePrint texturePrint;
+    DragWindow dragWindow;
+    Border border;
+
+    bool startingSelect = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,6 +21,8 @@ public class IconManager : MonoBehaviour
         audioManager = AudioManager.instance;    
         
         rectTransform = GetComponent<RectTransform>();
+        dragWindow = GetComponent<DragWindow>();
+        border = GetComponent<Border>();
         image = GetComponent<RawImage>();
         outline = GetComponent<Outline>();
         shadow = GetComponent<Shadow>();
@@ -38,7 +44,6 @@ public class IconManager : MonoBehaviour
         float eT = texturePrint.time + texturePrint.length;
 
         float curTime = audioManager.audioSource.time;
-        Debug.Log(sT + "," + eT + ":" + curTime);
         if (sT <= curTime && curTime <= eT)
         {
             if (texturePrint.image != null && image.texture == null)
@@ -46,11 +51,45 @@ public class IconManager : MonoBehaviour
                 image.texture = texturePrint.image;
             }
 
+            Selecting();
         }
         else
         {
-            Debug.Log("Destroying");
             Destroy(gameObject);
+        }
+    }
+
+    void Selecting()
+    {
+        border.enabled = (audioManager.selectedObject == gameObject);
+        dragWindow.canDrag = (audioManager.selectedObject == gameObject);
+
+        Rect rect = transform.parent.GetComponent<RectTransform>().rect;
+        Vector2 maxSize = new Vector2(rect.width,rect.height)/2;
+        dragWindow.boundry = new Vector4(-maxSize.x, maxSize.x, -maxSize.y, maxSize.y);
+        dragWindow.useBoundry = true;
+
+        if (audioManager.selectedObject == null)
+        {
+            if (Input.GetMouseButtonDown(0) && dragWindow.isMouseOver)
+            {
+                startingSelect = true;
+            }
+
+            if (Input.GetMouseButtonUp(0) && startingSelect)
+            {
+                if (dragWindow.isMouseOver)
+                {
+                    audioManager.selectedObject = gameObject;
+                }
+
+                startingSelect = false;
+            }
+
+            if (!Input.GetMouseButton(0))
+            {
+                startingSelect = false;
+            }
         }
     }
 }

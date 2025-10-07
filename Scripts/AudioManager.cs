@@ -56,6 +56,8 @@ public class AudioManager : MonoBehaviour
     public Transform texturesHolder;
     public GameObject iconDisplay;
 
+    public GameObject selectedObject = null;
+
     void Awake()
     {
         if (instance == null)
@@ -99,6 +101,18 @@ public class AudioManager : MonoBehaviour
         }
 
         ShowDisplay();
+        SelectObject();
+    }
+
+    void SelectObject()
+    {
+        if(selectedObject != null)
+        {
+            if(Input.GetMouseButtonUp(1))
+            {
+                selectedObject = null;
+            }
+        }
     }
 
     void ShowMenus()

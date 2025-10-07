@@ -2885,10 +2885,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 641046301}
     m_Modifications:
-    - target: {fileID: 72228247892294284, guid: fa8b70009d93df44b85e9b6753085076, type: 3}
-      propertyPath: m_Texture
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 93310888773322529, guid: fa8b70009d93df44b85e9b6753085076, type: 3}
       propertyPath: m_Name
       value: Icon Display
@@ -3981,6 +3977,7 @@ MonoBehaviour:
   lyricHolder: {fileID: 1838638998}
   texturesHolder: {fileID: 641046301}
   iconDisplay: {fileID: 93310888773322529, guid: fa8b70009d93df44b85e9b6753085076, type: 3}
+  selectedObject: {fileID: 0}
 --- !u!4 &1137637023
 Transform:
   m_ObjectHideFlags: 0

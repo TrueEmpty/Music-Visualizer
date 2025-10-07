@@ -15,6 +15,9 @@ public class DragWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField]
     bool dragging = false;
 
+    [HideInInspector]
+    public bool canDrag = true;
+
     [SerializeField]
     Vector3 startPoint = Vector3.zero;
 
@@ -36,48 +39,51 @@ public class DragWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // Update is called once per frame
     void Update()
     {
-        if(mouseOver)
+        if(canDrag)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (mouseOver)
             {
-                dragging = true;
-                startPoint = Input.mousePosition;
-                startPos = main.localPosition;
-            }
-        }
-
-        if(dragging)
-        {
-            Vector3 differance = Input.mousePosition - startPoint;
-            Vector3 newPos = startPos + differance;
-
-            if(useBoundry)
-            {
-                if(newPos.x < boundry.x * adjust.x)
+                if (Input.GetMouseButtonDown(0))
                 {
-                    newPos.x = boundry.x * adjust.x;
-                }
-                else if(newPos.x > boundry.y * adjust.x)
-                {
-                    newPos.x = boundry.y * adjust.x;
-                }
-
-
-                if (newPos.y < boundry.z * adjust.y)
-                {
-                    newPos.y = boundry.z * adjust.y;
-                }
-                else if (newPos.y > boundry.w * adjust.y)
-                {
-                    newPos.y = boundry.w * adjust.y;
+                    dragging = true;
+                    startPoint = Input.mousePosition;
+                    startPos = main.localPosition;
                 }
             }
 
-            main.localPosition = newPos;
-
-            if (Input.GetMouseButtonUp (0))
+            if (dragging)
             {
-                dragging = false;
+                Vector3 differance = Input.mousePosition - startPoint;
+                Vector3 newPos = startPos + differance;
+
+                if (useBoundry)
+                {
+                    if (newPos.x < boundry.x * adjust.x)
+                    {
+                        newPos.x = boundry.x * adjust.x;
+                    }
+                    else if (newPos.x > boundry.y * adjust.x)
+                    {
+                        newPos.x = boundry.y * adjust.x;
+                    }
+
+
+                    if (newPos.y < boundry.z * adjust.y)
+                    {
+                        newPos.y = boundry.z * adjust.y;
+                    }
+                    else if (newPos.y > boundry.w * adjust.y)
+                    {
+                        newPos.y = boundry.w * adjust.y;
+                    }
+                }
+
+                main.localPosition = newPos;
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    dragging = false;
+                }
             }
         }
     }
@@ -90,5 +96,13 @@ public class DragWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnPointerExit(PointerEventData pointerEventData)
     {
         mouseOver = false;
+    }
+
+    public bool isMouseOver 
+    {
+        get 
+        {
+            return mouseOver;
+        } 
     }
 }
