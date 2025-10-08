@@ -40,11 +40,7 @@ public class IconManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float sT = texturePrint.time;
-        float eT = texturePrint.time + texturePrint.length;
-
-        float curTime = audioManager.audioSource.time;
-        if (sT <= curTime && curTime <= eT)
+        if (texturePrint.WithinTime(audioManager.audioSource.time))
         {
             if (texturePrint.image != null && image.texture == null)
             {

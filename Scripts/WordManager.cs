@@ -27,19 +27,16 @@ public class WordManager : MonoBehaviour
         outline = GetComponent<Outline>();
         shadow = GetComponent<Shadow>();
 
-        word.text = lyricLine.text;
+        PositioningAndLyrics();
     }
 
     // Update is called once per frame
     void Update()
     {
-        float sT = lyricLine.time;
-        float eT = lyricLine.time + lyricLine.length;
-
-        float curTime = audioManager.audioSource.time;
-        if(sT <= curTime && curTime <= eT)
+        if(lyricLine.WithinTime(audioManager.audioSource.time))
         {
             Selecting();
+            PositioningAndLyrics();
         }
         else
         {
@@ -50,6 +47,7 @@ public class WordManager : MonoBehaviour
     void Selecting()
     {
         border.enabled = (audioManager.selectedObject == gameObject);
+        border.effectColor = (audioManager.currentAutoLyric == this) ? audioManager.autoLyricColor : audioManager.borderColor;
         dragWindow.canDrag = (audioManager.selectedObject == gameObject);
 
         Rect rect = transform.parent.GetComponent<RectTransform>().rect;
@@ -79,5 +77,13 @@ public class WordManager : MonoBehaviour
                 startingSelect = false;
             }
         }
+    }
+
+    void PositioningAndLyrics()
+    {
+        word.text = lyricLine.text;
+
+        rectTransform.anchoredPosition = lyricLine.position;
+        rectTransform.sizeDelta = lyricLine.size;
     }
 }

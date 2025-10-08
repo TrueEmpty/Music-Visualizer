@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
     float audioLength = 0;
     public Texture playTexture;
     public Texture pauseTexture;
-    bool paused = false;
+    public bool paused = false;
 
     [Header("Buttons")]
     public RawImage playButton;
@@ -33,10 +33,13 @@ public class AudioManager : MonoBehaviour
     public int currentProject = -1;
 
     [Header("Bckground and Icon")]
+    public MouseOverRectTransformPosition display;
     Texture backgroundImage;
     public RawImage backgroundImageRI;
     public InputField titleName;
     public Text titleText;
+    public Image playHandle;
+    public Image playFillBar;
 
     [Header("Menus")]
     public Menus currentMenu = Menus.Options;
@@ -51,12 +54,21 @@ public class AudioManager : MonoBehaviour
     public GameObject wordDisplay;
     public InputField bulkLyrics;
     public Transform lyricHolder;
+    public WordManager currentAutoLyric = null;
+    public bool autoLyricAddMode = false;
 
     [Header("Icon Setup Info")]
     public Transform texturesHolder;
     public GameObject iconDisplay;
 
     public GameObject selectedObject = null;
+
+
+    [Header("Color Setup Info")]
+    public Color borderColor;
+    public Color autoLyricColor;
+    public Color sliderColor;
+
 
     void Awake()
     {
@@ -102,13 +114,54 @@ public class AudioManager : MonoBehaviour
 
         ShowDisplay();
         SelectObject();
+        LyricUpdate();
+    }
+
+    void LyricUpdate()
+    {
+        if (CurrentProject(out VisualizerProject cP))
+        {
+            if(!paused)
+            {
+                //Get all Lyrics that should be on display
+                List<LyricLine> currentLyricsLines = cP.lyrics.FindAll(x=> x.WithinTime(audioSource.time));
+
+                //Display spawn any that isnt already
+                foreach(LyricLine l in currentLyricsLines)
+                {
+                    bool exists = false;
+
+                    for(int i = lyricHolder.childCount - 1; i >= 0; i--)
+                    {
+                        Transform ch = lyricHolder.GetChild(i);
+
+                        if (ch != null)
+                        {                            
+                            if (ch.gameObject.TryGetComponent<WordManager>(out var cL))
+                            {
+                                if (cL.lyricLine == l)
+                                {
+                                    exists = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if(!exists)
+                    {
+                        LoadWordDisplay(l);
+                    }
+                }
+            }
+        }
     }
 
     void SelectObject()
     {
         if(selectedObject != null)
         {
-            if(Input.GetMouseButtonUp(1))
+            if(Input.GetMouseButtonUp(1) && !autoLyricAddMode)
             {
                 selectedObject = null;
             }
@@ -203,6 +256,61 @@ public class AudioManager : MonoBehaviour
                     MoveTrack();
                 }
             }
+
+            //Auto Lyric Mode
+            if (CurrentProject(out VisualizerProject cP))
+            {
+                autoLyricAddMode = (Input.GetKey(KeyCode.L));
+                if (!paused && autoLyricAddMode)
+                {
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        if (currentAutoLyric == null)
+                        {
+                            //Create new lyric line
+                            display.GetMousePosition(out Vector2 mousePoint);
+                            cP.lyrics.Add(new LyricLine(audioSource.time,cP.lyrics.Count,
+                                mousePoint,new Vector2(300,50)));
+
+                            //Create Lyric Display with default text
+                            GameObject go = Instantiate(wordDisplay, lyricHolder);
+
+                            currentAutoLyric = go.GetComponent<WordManager>();
+                            if (currentAutoLyric != null)
+                            {
+                                currentAutoLyric.lyricLine = cP.lyrics[^1];
+                            }
+                        }
+                    }
+
+                    if (Input.GetMouseButtonUp(1))
+                    {
+                        if (currentAutoLyric != null)
+                        {
+                            //Finish new lyric line
+                            float length = audioSource.time - currentAutoLyric.lyricLine.time;
+                            currentAutoLyric.lyricLine.length = length;
+
+                            currentAutoLyric = null;
+                        }
+                    }
+                }
+                else
+                {
+                    if (currentAutoLyric != null)
+                    {
+                        //Finish new lyric line
+                        float length = audioSource.time - currentAutoLyric.lyricLine.time;
+                        currentAutoLyric.lyricLine.length = length;
+                    }
+
+                    currentAutoLyric = null;
+                }
+            }
+            else
+            {
+                autoLyricAddMode = false;
+            }
         }
     }
 
@@ -220,6 +328,9 @@ public class AudioManager : MonoBehaviour
         }
 
         titleText.text = cP.title;
+
+        playHandle.color = (autoLyricAddMode) ? autoLyricColor : sliderColor;
+        playFillBar.color = (autoLyricAddMode) ? autoLyricColor : sliderColor;
     }
 
     public bool CurrentProject(out VisualizerProject cP)
@@ -439,11 +550,13 @@ public class AudioManager : MonoBehaviour
         else if(paused)
         {
             audioSource.UnPause();
+            paused = false;
         }
         else //It ended so play from where it left off
         {
             audioSource.Play();
             audioSource.time = audioSlider.value;
+            paused = true;
         }
     }
 
