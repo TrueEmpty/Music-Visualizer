@@ -47,4 +47,18 @@ public class MouseOverRectTransformPosition : MonoBehaviour, IPointerEnterHandle
         point = localPoint;
         return isMouseOver;
     }
+
+    public bool GetMousePositionPercent(out Vector2 pointPercent, bool halfAdjust = false)
+    {
+        Vector2 nLp = localPoint;
+
+        if (halfAdjust)
+        {
+            nLp.x += rectTransform.rect.width / 2;
+            nLp.y += rectTransform.rect.height / 2;
+        }
+
+        pointPercent = nLp / new Vector2(rectTransform.rect.width, rectTransform.rect.height);
+        return isMouseOver;
+    }
 }

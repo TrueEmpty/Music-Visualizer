@@ -15,7 +15,10 @@ GameObject:
   - component: {fileID: 2034789995879338696}
   - component: {fileID: 3168377137265524578}
   - component: {fileID: 7122512396013179920}
+  - component: {fileID: 6049384204062002771}
   - component: {fileID: 456988442902363449}
+  - component: {fileID: 5526125674426942818}
+  - component: {fileID: 8825826054528252451}
   m_Layer: 5
   m_Name: Word Display
   m_TagString: Untagged
@@ -106,7 +109,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Tru
+  m_Text: She be gone every night
 --- !u!114 &2034789995879338696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,13 +147,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 958248933845885803}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 711851cd66c93ea4da90d2539d09460f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   effectDistance: 1.07
   effectColor: {r: 1, g: 0.99352974, b: 0, a: 1}
+--- !u!114 &6049384204062002771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958248933845885803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e906dd1a693574da18ebbb204c7b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleIndentRangePercentX: 0.05
+  scaleIndentRangePercentY: 0.05
 --- !u!114 &456988442902363449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,6 +188,38 @@ MonoBehaviour:
   canDrag: 0
   startPoint: {x: 0, y: 0, z: 0}
   startPos: {x: 0, y: 0, z: 0}
+--- !u!114 &5526125674426942818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958248933845885803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88d610011ef050845827367dbe104537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  main: {fileID: 6388487535349084124}
+  mouseOver: 0
+  dragging: 0
+  canDrag: 1
+  startPoint: {x: 0, y: 0, z: 0}
+  startPos: {x: 0, y: 0, z: 0}
+--- !u!114 &8825826054528252451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958248933845885803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5edbab47e5c7aa42a3cb2ad877d5651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localPoint: {x: 0, y: 0}
+  isMouseOver: 0
 --- !u!1 &1012924088955733220
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,7 +237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4062220213719318401
 RectTransform:
   m_ObjectHideFlags: 0
@@ -263,7 +312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7221319916097954943
 RectTransform:
   m_ObjectHideFlags: 0
@@ -338,7 +387,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3527903373172716066
 RectTransform:
   m_ObjectHideFlags: 0
@@ -413,7 +462,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7216562853007091502
 RectTransform:
   m_ObjectHideFlags: 0

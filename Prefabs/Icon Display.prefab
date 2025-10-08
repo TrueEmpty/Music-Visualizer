@@ -13,7 +13,10 @@ GameObject:
   - component: {fileID: 4499504517632830220}
   - component: {fileID: 72228247892294284}
   - component: {fileID: 1499200455623806117}
+  - component: {fileID: -4535267637557906320}
   - component: {fileID: 7532809030145280852}
+  - component: {fileID: -7626372517114963338}
+  - component: {fileID: 4041918296670978171}
   m_Layer: 5
   m_Name: Icon Display
   m_TagString: Untagged
@@ -113,6 +116,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectDistance: 1.07
   effectColor: {r: 1, g: 0.99215686, b: 0, a: 1}
+--- !u!114 &-4535267637557906320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93310888773322529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e906dd1a693574da18ebbb204c7b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleIndentRangePercentX: 0.05
+  scaleIndentRangePercentY: 0.05
+  halfUpdate: 1
 --- !u!114 &7532809030145280852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +149,38 @@ MonoBehaviour:
   mouseOver: 0
   dragging: 0
   canDrag: 0
+  startPoint: {x: 0, y: 0, z: 0}
+  startPos: {x: 0, y: 0, z: 0}
+--- !u!114 &-7626372517114963338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93310888773322529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5edbab47e5c7aa42a3cb2ad877d5651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localPoint: {x: 0, y: 0}
+  isMouseOver: 0
+--- !u!114 &4041918296670978171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93310888773322529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88d610011ef050845827367dbe104537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  main: {fileID: 0}
+  mouseOver: 0
+  dragging: 0
+  canDrag: 1
   startPoint: {x: 0, y: 0, z: 0}
   startPos: {x: 0, y: 0, z: 0}
 --- !u!1 &5908971923819462806

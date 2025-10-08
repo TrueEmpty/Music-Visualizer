@@ -10,7 +10,9 @@ public class WordManager : MonoBehaviour
 
     AudioManager audioManager;
     public LyricLine lyricLine;
+    MouseOverRectTransformPosition mO;
     DragWindow dragWindow;
+    ScaleWindow scaleWindow;
     Border border;
 
     bool startingSelect = false;
@@ -22,6 +24,8 @@ public class WordManager : MonoBehaviour
         
         rectTransform = GetComponent<RectTransform>();
         dragWindow = GetComponent<DragWindow>();
+        scaleWindow = GetComponent<ScaleWindow>();
+        mO = GetComponent<MouseOverRectTransformPosition>();
         border = GetComponent<Border>();
         word = GetComponent<Text>();
         outline = GetComponent<Outline>();
@@ -57,14 +61,14 @@ public class WordManager : MonoBehaviour
 
         if (audioManager.selectedObject == null)
         {
-            if (Input.GetMouseButtonDown(0) && dragWindow.isMouseOver)
+            if (Input.GetMouseButtonDown(0) && mO.isMouseOver)
             {
                 startingSelect = true;
             }
 
             if(Input.GetMouseButtonUp(0) && startingSelect)
             {
-                if(dragWindow.isMouseOver)
+                if(mO.isMouseOver)
                 {
                     audioManager.selectedObject = gameObject;
                 }
@@ -83,7 +87,24 @@ public class WordManager : MonoBehaviour
     {
         word.text = lyricLine.text;
 
-        rectTransform.anchoredPosition = lyricLine.position;
-        rectTransform.sizeDelta = lyricLine.size;
+        if (!dragWindow.isDragging)
+        {
+            rectTransform.anchoredPosition = lyricLine.position;
+        }
+
+        if (!scaleWindow.isDragging)
+        {
+            rectTransform.sizeDelta = lyricLine.size;
+        }
+    }
+
+    void FinishedDraggingWindow(Vector2 newPos)
+    {
+        lyricLine.position = newPos;
+    }
+
+    void FinishedScalingWindow(Vector2 newSize)
+    {
+        lyricLine.size = newSize;
     }
 }

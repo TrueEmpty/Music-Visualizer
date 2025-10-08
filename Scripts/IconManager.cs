@@ -10,7 +10,9 @@ public class IconManager : MonoBehaviour
 
     AudioManager audioManager;
     public TexturePrint texturePrint;
+    MouseOverRectTransformPosition mO;
     DragWindow dragWindow;
+    ScaleWindow scaleWindow;
     Border border;
 
     bool startingSelect = false;
@@ -22,6 +24,8 @@ public class IconManager : MonoBehaviour
         
         rectTransform = GetComponent<RectTransform>();
         dragWindow = GetComponent<DragWindow>();
+        scaleWindow = GetComponent<ScaleWindow>();
+        mO = GetComponent<MouseOverRectTransformPosition>();
         border = GetComponent<Border>();
         image = GetComponent<RawImage>();
         outline = GetComponent<Outline>();
@@ -48,6 +52,7 @@ public class IconManager : MonoBehaviour
             }
 
             Selecting();
+            PositioningAndLyrics();
         }
         else
         {
@@ -67,14 +72,14 @@ public class IconManager : MonoBehaviour
 
         if (audioManager.selectedObject == null)
         {
-            if (Input.GetMouseButtonDown(0) && dragWindow.isMouseOver)
+            if (Input.GetMouseButtonDown(0) && mO.isMouseOver)
             {
                 startingSelect = true;
             }
 
             if (Input.GetMouseButtonUp(0) && startingSelect)
             {
-                if (dragWindow.isMouseOver)
+                if (mO.isMouseOver)
                 {
                     audioManager.selectedObject = gameObject;
                 }
@@ -87,5 +92,33 @@ public class IconManager : MonoBehaviour
                 startingSelect = false;
             }
         }
+    }
+
+    void PositioningAndLyrics()
+    {
+        if (texturePrint.image != null && image.texture == null)
+        {
+            image.texture = texturePrint.image;
+        }
+
+        if (!dragWindow.isDragging)
+        {
+            rectTransform.anchoredPosition = texturePrint.position;
+        }
+
+        if (!scaleWindow.isDragging)
+        {
+            rectTransform.sizeDelta = texturePrint.size;
+        }
+    }
+
+    void FinishedDraggingWindow(Vector2 newPos)
+    {
+        texturePrint.position = newPos;
+    }
+
+    void FinishedScalingWindow(Vector2 newSize)
+    {
+        texturePrint.size = newSize;
     }
 }

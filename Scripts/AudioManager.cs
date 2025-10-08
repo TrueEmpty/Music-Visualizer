@@ -121,37 +121,34 @@ public class AudioManager : MonoBehaviour
     {
         if (CurrentProject(out VisualizerProject cP))
         {
-            if(!paused)
+            //Get all Lyrics that should be on display
+            List<LyricLine> currentLyricsLines = cP.lyrics.FindAll(x=> x.WithinTime(audioSource.time));
+
+            //Display spawn any that isnt already
+            foreach(LyricLine l in currentLyricsLines)
             {
-                //Get all Lyrics that should be on display
-                List<LyricLine> currentLyricsLines = cP.lyrics.FindAll(x=> x.WithinTime(audioSource.time));
+                bool exists = false;
 
-                //Display spawn any that isnt already
-                foreach(LyricLine l in currentLyricsLines)
+                for(int i = lyricHolder.childCount - 1; i >= 0; i--)
                 {
-                    bool exists = false;
+                    Transform ch = lyricHolder.GetChild(i);
 
-                    for(int i = lyricHolder.childCount - 1; i >= 0; i--)
-                    {
-                        Transform ch = lyricHolder.GetChild(i);
-
-                        if (ch != null)
-                        {                            
-                            if (ch.gameObject.TryGetComponent<WordManager>(out var cL))
+                    if (ch != null)
+                    {                            
+                        if (ch.gameObject.TryGetComponent<WordManager>(out var cL))
+                        {
+                            if (cL.lyricLine == l)
                             {
-                                if (cL.lyricLine == l)
-                                {
-                                    exists = true;
-                                    break;
-                                }
+                                exists = true;
+                                break;
                             }
                         }
                     }
+                }
 
-                    if(!exists)
-                    {
-                        LoadWordDisplay(l);
-                    }
+                if(!exists)
+                {
+                    LoadWordDisplay(l);
                 }
             }
         }
@@ -261,7 +258,7 @@ public class AudioManager : MonoBehaviour
             if (CurrentProject(out VisualizerProject cP))
             {
                 autoLyricAddMode = (Input.GetKey(KeyCode.L));
-                if (!paused && autoLyricAddMode)
+                if (autoLyricAddMode)
                 {
                     if (Input.GetMouseButtonDown(1))
                     {
