@@ -56,6 +56,12 @@ public class AudioManager : MonoBehaviour
     public Transform lyricHolder;
     public WordManager currentAutoLyric = null;
     public bool autoLyricAddMode = false;
+    public Transform lyricDisplay;
+    public GameObject lyricInfo;
+    public RectTransform location;
+    float locationStart = -10;
+    float loactionStep = -12.5f;
+
 
     [Header("Icon Setup Info")]
     public Transform texturesHolder;
@@ -69,6 +75,7 @@ public class AudioManager : MonoBehaviour
     public Color autoLyricColor;
     public Color sliderColor;
 
+    
 
     void Awake()
     {
@@ -97,18 +104,18 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         ShowMenus();
+        OptionDisplay();
 
         switch (currentMenu)
         {
             case Menus.Options:
-                OptionDisplay();
                 ExtraButtons();
             break;
             case Menus.LoadProject:
 
             break;
             case Menus.Lyrics:
-
+                LyricTabUpdate();
             break;
         }
 
@@ -267,7 +274,7 @@ public class AudioManager : MonoBehaviour
                             //Create new lyric line
                             display.GetMousePosition(out Vector2 mousePoint);
                             cP.lyrics.Add(new LyricLine(audioSource.time,cP.lyrics.Count,
-                                mousePoint,new Vector2(300,50)));
+                                mousePoint,new Vector2(714,80)));
 
                             //Create Lyric Display with default text
                             GameObject go = Instantiate(wordDisplay, lyricHolder);
@@ -360,7 +367,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    bool InputFieldActive()
+    public bool InputFieldActive()
     {
         var go = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
         return go != null && go.GetComponent<InputField>() != null;
@@ -369,7 +376,7 @@ public class AudioManager : MonoBehaviour
     void LyricTabSetup()
     {
         //Clear Index Time and Dashes
-        for(int i = indexTimeHolder.childCount - 1; i >= 0; i--)
+        for (int i = indexTimeHolder.childCount - 1; i >= 0; i--)
         {
             Destroy(indexTimeHolder.GetChild(i).gameObject);
         }
@@ -384,11 +391,11 @@ public class AudioManager : MonoBehaviour
             TimeSpan cTime = TimeSpan.FromSeconds(i);
 
             //Create Seconds Index
-            GameObject iTime = Instantiate(indexTimeObj,indexTimeHolder) as GameObject;
+            GameObject iTime = Instantiate(indexTimeObj, indexTimeHolder) as GameObject;
 
             Text iText = iTime.GetComponent<Text>();
 
-            if(iText != null)
+            if (iText != null)
             {
                 iText.text = cTime.ToString(@"hh\:mm\:ss") + "---";
             }
@@ -396,7 +403,7 @@ public class AudioManager : MonoBehaviour
             if (i < tS)
             {
                 //Create Milli-Second Dashes
-                for(int r = 0; r < 4; r++)
+                for (int r = 0; r < 4; r++)
                 {
                     GameObject dTime = Instantiate(indexTimeObj, indexTimeHolder) as GameObject;
 
@@ -408,6 +415,52 @@ public class AudioManager : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    void LyricTabUpdate()
+    {
+        if (CurrentProject(out VisualizerProject cP))
+        {
+            //Set up LyricInfoFields
+            for (int i = 0; i < cP.lyrics.Count; i++)
+            {
+                LyricLine lL = cP.lyrics[i];
+
+                //Make sure it dosent already exist
+                bool exist = false;
+                for (int l = 0; l < lyricDisplay.childCount; l++)
+                {
+                    LyricInfo lI = lyricDisplay.GetChild(l).GetComponent<LyricInfo>();
+
+                    if (lI != null)
+                    {
+                        if (lI.lyricLine == lL)
+                        {
+                            exist = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!exist)
+                {
+                    GameObject sLI = Instantiate(lyricInfo, lyricDisplay);
+
+                    if (sLI.TryGetComponent<LyricInfo>(out var nLI))
+                    {
+                        nLI.lyricLine = lL;
+                    }
+                }
+            }
+
+            location.gameObject.SetActive(true);
+            location.anchoredPosition = new Vector2(location.anchoredPosition.x, locationStart + (audioSource.time * loactionStep));
+        }
+        else
+        {
+            location.gameObject.SetActive(false);
+            //Show text saying add music
         }
     }
 

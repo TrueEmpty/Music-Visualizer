@@ -35,7 +35,6 @@ public class DragScaleControl : MonoBehaviour
     {
         if(mO.GetMousePositionPercent(out Vector2 pointPercent, halfUpdate))
         {
-            Debug.Log(pointPercent);
             if((pointPercent.x <= scaleIndentRangePercentX || pointPercent.x >= 1 - scaleIndentRangePercentX) ||
                 (pointPercent.y <= scaleIndentRangePercentY || pointPercent.y >= 1 - scaleIndentRangePercentY))
             {
