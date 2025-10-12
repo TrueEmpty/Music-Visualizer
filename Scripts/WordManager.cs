@@ -37,7 +37,8 @@ public class WordManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(lyricLine.WithinTime(audioManager.audioSource.time))
+        word.raycastTarget = !audioManager.unclickables.Contains(gameObject);
+        if (lyricLine.WithinTime(audioManager.audioSource.time))
         {
             Selecting();
             PositioningAndLyrics();
@@ -81,6 +82,14 @@ public class WordManager : MonoBehaviour
                 startingSelect = false;
             }
         }
+        else if(audioManager.selectedObject == gameObject)
+        {
+            if(Input.GetMouseButtonDown(2))
+            {
+                audioManager.unclickables.Add(gameObject);
+                audioManager.selectedObject = null;
+            }
+        }
     }
 
     void PositioningAndLyrics()
@@ -103,8 +112,9 @@ public class WordManager : MonoBehaviour
         lyricLine.position = newPos;
     }
 
-    void FinishedScalingWindow(Vector2 newSize)
+    void FinishedScalingWindow((Vector2,Vector2) newSizePos)
     {
-        lyricLine.size = newSize;
+        lyricLine.size = newSizePos.Item1;
+        lyricLine.position = newSizePos.Item2;
     }
 }

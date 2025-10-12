@@ -9,6 +9,11 @@ public class MouseOverRectTransformPosition : MonoBehaviour, IPointerEnterHandle
     public Vector2 localPoint = Vector2.zero;
     public bool isMouseOver = false;
 
+    public Vector2 offset = Vector2.zero;
+
+    [SerializeField]
+    Rect pointGrabbed;
+
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -58,6 +63,9 @@ public class MouseOverRectTransformPosition : MonoBehaviour, IPointerEnterHandle
             nLp.y += rectTransform.rect.height / 2;
         }
 
+        nLp += offset;
+
+        pointGrabbed = new Rect(nLp.x, nLp.y, rectTransform.rect.width, rectTransform.rect.height);
         pointPercent = nLp / new Vector2(rectTransform.rect.width, rectTransform.rect.height);
         return isMouseOver;
     }

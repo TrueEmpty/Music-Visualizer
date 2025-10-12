@@ -44,6 +44,7 @@ public class IconManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        image.raycastTarget = !audioManager.unclickables.Contains(gameObject);
         if (texturePrint.WithinTime(audioManager.audioSource.time))
         {
             if (texturePrint.image != null && image.texture == null)
@@ -92,6 +93,14 @@ public class IconManager : MonoBehaviour
                 startingSelect = false;
             }
         }
+        else if (audioManager.selectedObject == gameObject)
+        {
+            if (Input.GetMouseButtonDown(2))
+            {
+                audioManager.unclickables.Add(gameObject);
+                audioManager.selectedObject = null;
+            }
+        }
     }
 
     void PositioningAndLyrics()
@@ -117,8 +126,9 @@ public class IconManager : MonoBehaviour
         texturePrint.position = newPos;
     }
 
-    void FinishedScalingWindow(Vector2 newSize)
+    void FinishedScalingWindow((Vector2, Vector2) newSizePos)
     {
-        texturePrint.size = newSize;
+        texturePrint.size = newSizePos.Item1;
+        texturePrint.position = newSizePos.Item2;
     }
 }

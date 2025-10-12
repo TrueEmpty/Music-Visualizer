@@ -75,6 +75,8 @@ public class AudioManager : MonoBehaviour
     public Color autoLyricColor;
     public Color sliderColor;
 
+    [HideInInspector]
+    public List<GameObject> unclickables = new List<GameObject>();
     
 
     void Awake()

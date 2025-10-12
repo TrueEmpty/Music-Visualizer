@@ -23,6 +23,9 @@ public class DragWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField]
     Vector3 startPos = Vector3.zero;
 
+    public bool lockHoizontal = false;
+    public bool lockVertical = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -54,6 +57,8 @@ public class DragWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (dragging)
         {
             Vector3 differance = Input.mousePosition - startPoint;
+            differance.x *= (lockHoizontal) ? 0 : 1;
+            differance.y *= (lockVertical) ? 0 : 1;
             Vector3 newPos = startPos + differance;
 
             if (useBoundry)
@@ -66,7 +71,6 @@ public class DragWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 {
                     newPos.x = boundry.y * adjust.x;
                 }
-
 
                 if (newPos.y < boundry.z * adjust.y)
                 {

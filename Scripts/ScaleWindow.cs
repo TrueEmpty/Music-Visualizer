@@ -13,8 +13,20 @@ public class ScaleWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public bool canDrag = true;
 
+    public bool dragFromTop = true;
+    public bool dragFromRight = true;
+    public bool dragFromBot = true;
+    public bool dragFromLeft = true;
+
+    public bool lockHoizontal = false;
+    public bool lockVertical = false;
+
+
     [SerializeField]
     Vector3 startPoint = Vector3.zero;
+
+    [SerializeField]
+    Vector2 startSize;
 
     [SerializeField]
     Vector3 startPos = Vector3.zero;
@@ -39,6 +51,7 @@ public class ScaleWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 {
                     dragging = true;
                     startPoint = Input.mousePosition;
+                    startSize = main.sizeDelta;
                     startPos = main.localPosition;
                 }
             }
@@ -46,17 +59,73 @@ public class ScaleWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
         if (dragging)
         {
-            Vector3 differance = Input.mousePosition - startPoint;
-            startPoint = Input.mousePosition;
+            Vector3 delta = Input.mousePosition - startPoint;
+            Vector2 newSize = startSize;
+            Vector2 newPos = startPos;
 
-            main.sizeDelta += (Vector2)differance;
+            if (!lockVertical)
+            {
+                // Vertical scaling
+                if (dragFromTop && dragFromBot)
+                {
+                    newSize.y = startSize.y + delta.y;
+                }
+                else if (dragFromTop)
+                {
+                    newSize.y = startSize.y + delta.y;
+                    newPos.y = startPos.y + delta.y * 0.5f;
+                }
+                else if (dragFromBot)
+                {
+                    newSize.y = startSize.y - delta.y;
+                    newPos.y = startPos.y + delta.y * 0.5f;
+                }
+            }
+
+            // Horizontal scaling
+            if(!lockHoizontal)
+            {
+                if (dragFromLeft && dragFromRight)
+                {
+                    newSize.x = startSize.x + delta.x;
+                }
+                else if (dragFromRight)
+                {
+                    newSize.x = startSize.x + delta.x;
+                    newPos.x = startPos.x + delta.x * 0.5f;
+                }
+                else if (dragFromLeft)
+                {
+                    newSize.x = startSize.x - delta.x;
+                    newPos.x = startPos.x + delta.x * 0.5f;
+                }
+            }
+
+            main.sizeDelta = newSize;
+            main.localPosition = newPos;
 
             if (Input.GetMouseButtonUp(0))
             {
-                SendMessage("FinishedScalingWindow", main.sizeDelta, SendMessageOptions.DontRequireReceiver);
+                SendMessage("FinishedScalingWindow", (main.sizeDelta, main.anchoredPosition), SendMessageOptions.DontRequireReceiver);
                 dragging = false;
             }
         }
+    }
+
+    public void SetScaleDirections(bool top, bool right, bool bot, bool left)
+    {
+        dragFromTop = top;
+        dragFromRight = right;
+        dragFromBot = bot;
+        dragFromLeft = left;
+    }
+
+    public void SetScaleDirections((bool, bool, bool, bool) scaleDirectionsTRBL)
+    {
+        dragFromTop = scaleDirectionsTRBL.Item1;
+        dragFromRight = scaleDirectionsTRBL.Item2;
+        dragFromBot = scaleDirectionsTRBL.Item3;
+        dragFromLeft = scaleDirectionsTRBL.Item4;
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
