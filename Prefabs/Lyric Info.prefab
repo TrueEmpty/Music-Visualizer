@@ -78,7 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localPoint: {x: 0, y: 0}
   isMouseOver: 0
-  offset: {x: 0, y: 35}
+  offset: {x: 0, y: 0}
   pointGrabbed:
     serializedVersion: 2
     x: 0
@@ -106,13 +106,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scaleIndentRangePercentX: 0
-  scaleIndentRangePercentY: 0.155
+  scaleIndentRangePercentY: 0.25
   scalingMode: 0
   draggingMode: 1
   directionalScaling: 1
-  halfUpdate: 1
+  halfUpdateX: 1
+  halfUpdateY: 0
+  inverseX: 0
+  inverseY: 1
   lockHoizontal: 1
   lockVertical: 0
+  flipXScaleDir: 0
+  flipYScaleDir: 1
 --- !u!114 &-1414588465733006603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,10 +158,11 @@ MonoBehaviour:
   canDrag: 1
   dragFromTop: 1
   dragFromRight: 1
-  dragFromBot: 1
+  dragFromBot: 0
   dragFromLeft: 1
   lockHoizontal: 0
   lockVertical: 0
+  positionStable: {x: 1, y: 1, z: 0, w: 0}
   startPoint: {x: 0, y: 0, z: 0}
   startSize: {x: 0, y: 0}
   startPos: {x: 0, y: 0, z: 0}

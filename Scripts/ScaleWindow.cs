@@ -21,6 +21,8 @@ public class ScaleWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public bool lockHoizontal = false;
     public bool lockVertical = false;
 
+    public Vector4 positionStable = new Vector4(.5f, .5f, .5f, .5f);//Top,Right,Bot,Left
+
 
     [SerializeField]
     Vector3 startPoint = Vector3.zero;
@@ -73,12 +75,12 @@ public class ScaleWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 else if (dragFromTop)
                 {
                     newSize.y = startSize.y + delta.y;
-                    newPos.y = startPos.y + delta.y * 0.5f;
+                    newPos.y = startPos.y + delta.y * positionStable.x;
                 }
                 else if (dragFromBot)
                 {
                     newSize.y = startSize.y - delta.y;
-                    newPos.y = startPos.y + delta.y * 0.5f;
+                    newPos.y = startPos.y + delta.y * positionStable.z;
                 }
             }
 
@@ -92,12 +94,12 @@ public class ScaleWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 else if (dragFromRight)
                 {
                     newSize.x = startSize.x + delta.x;
-                    newPos.x = startPos.x + delta.x * 0.5f;
+                    newPos.x = startPos.x + delta.x * positionStable.y;
                 }
                 else if (dragFromLeft)
                 {
                     newSize.x = startSize.x - delta.x;
-                    newPos.x = startPos.x + delta.x * 0.5f;
+                    newPos.x = startPos.x + delta.x * positionStable.w;
                 }
             }
 

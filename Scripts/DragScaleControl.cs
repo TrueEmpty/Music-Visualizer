@@ -24,10 +24,16 @@ public class DragScaleControl : MonoBehaviour
 
     [Space(10)]
     public bool directionalScaling = true;
-    public bool halfUpdate = false;
+    public bool halfUpdateX = false;
+    public bool halfUpdateY = false;
+    public bool inverseX = false;
+    public bool inverseY = false;
 
     public bool lockHoizontal = false;
     public bool lockVertical = false;
+
+    public bool flipXScaleDir = false;
+    public bool flipYScaleDir = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,7 +48,7 @@ public class DragScaleControl : MonoBehaviour
     {
         (bool, bool, bool, bool) scaleDirection = (true, true, true, true);
 
-        if(mO.GetMousePositionPercent(out Vector2 pointPercent, halfUpdate))
+        if(mO.GetMousePositionPercent(out Vector2 pointPercent, halfUpdateX, halfUpdateY, inverseX, inverseY))
         {
             if((pointPercent.x <= scaleIndentRangePercentX || pointPercent.x >= 1 - scaleIndentRangePercentX) ||
                 (pointPercent.y <= scaleIndentRangePercentY || pointPercent.y >= 1 - scaleIndentRangePercentY))
@@ -55,13 +61,13 @@ public class DragScaleControl : MonoBehaviour
                     if (directionalScaling)
                     {
                         //Top
-                        scaleDirection.Item1 = (pointPercent.y >= 1 - scaleIndentRangePercentY);
+                        scaleDirection.Item1 = flipYScaleDir ? (pointPercent.y <= scaleIndentRangePercentY) : (pointPercent.y >= 1 - scaleIndentRangePercentY);
                         //Right
-                        scaleDirection.Item2 = (pointPercent.x >= 1 - scaleIndentRangePercentX);
+                        scaleDirection.Item2 = flipXScaleDir ? (pointPercent.x <= scaleIndentRangePercentX) : (pointPercent.x >= 1 - scaleIndentRangePercentX);
                         //Bot
-                        scaleDirection.Item3 = (pointPercent.y <= scaleIndentRangePercentY);
+                        scaleDirection.Item3 = flipYScaleDir ? (pointPercent.y >= 1 - scaleIndentRangePercentY) : (pointPercent.y <= scaleIndentRangePercentY);
                         //Left
-                        scaleDirection.Item4 = (pointPercent.x <= scaleIndentRangePercentX);
+                        scaleDirection.Item4 = flipXScaleDir ? (pointPercent.x >= 1 - scaleIndentRangePercentX) : (pointPercent.x <= scaleIndentRangePercentX);
                     }
                 }
             }

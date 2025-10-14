@@ -86,6 +86,6 @@ public class LyricInfo : MonoBehaviour
     void FinishedScalingWindow((Vector2, Vector2) newSizePos)
     {
         lyricLine.length = newSizePos.Item1.y / secondLength;
-        lyricLine.time = newSizePos.Item2.y / secondDistance;
+        //lyricLine.time = newSizePos.Item2.y / secondDistance;
     }
 }
