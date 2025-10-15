@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Windows.WebCam;
 
 public class WordManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class WordManager : MonoBehaviour
     Shadow shadow;
 
     AudioManager audioManager;
+    public VideoCapture capture;
     public LyricLine lyricLine;
     MouseOverRectTransformPosition mO;
     DragWindow dragWindow;
@@ -37,15 +39,29 @@ public class WordManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        word.raycastTarget = !audioManager.unclickables.Contains(gameObject);
-        if (lyricLine.WithinTime(audioManager.audioSource.time))
+        if (capture != null)
         {
-            Selecting();
-            PositioningAndLyrics();
+            if (lyricLine.WithinTime(capture.currentTime))
+            {
+                PositioningAndLyrics();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
         else
         {
-            Destroy(gameObject);
+            word.raycastTarget = !audioManager.unclickables.Contains(gameObject);
+            if (lyricLine.WithinTime(audioManager.audioSource.time))
+            {
+                Selecting();
+                PositioningAndLyrics();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 

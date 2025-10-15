@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
-public class VisualizerRecorder : MonoBehaviour
+public class VideoCapture : MonoBehaviour
 {
+    AudioManager audioManager;
     public Camera captureCamera;
     public int width = 1920;
     public int height = 1080;
@@ -20,9 +23,19 @@ public class VisualizerRecorder : MonoBehaviour
 
     public event Action<string> OnRecordingFinished;
 
-    public void StartRecording(VisualizerProject project)
+    public float currentTime = 0;
+    public RawImage backgroundImageRI;
+    public Transform lyricHolder;
+    public Transform texturesHolder;
+
+    void Start()
     {
-        StartCoroutine(CaptureVisualizerProject(project));
+        audioManager = AudioManager.instance;
+    }
+
+    public void StartRecording(VisualizerProject new_project)
+    {
+        StartCoroutine(CaptureVisualizerProject(new_project));
     }
 
     private IEnumerator CaptureVisualizerProject(VisualizerProject project)
@@ -57,7 +70,8 @@ public class VisualizerRecorder : MonoBehaviour
             }
             else
             {
-                var audioClip = DownloadHandlerAudioClip.GetContent(www); float duration = audioClip.length; // total video duration based on audio
+                var audioClip = DownloadHandlerAudioClip.GetContent(www);
+                float duration = audioClip.length; // total video duration based on audio
 
                 Time.captureFramerate = frameRate;
                 Time.timeScale = speedupFactor;
@@ -67,28 +81,86 @@ public class VisualizerRecorder : MonoBehaviour
 
                 UnityEngine.Debug.Log($"Starting capture: {totalFrames} frames for project {projectName}");
 
+                //Load in Background
+                string path = project.backgroundPath;
+                if (path != "")
+                {
+                    string background_url = "file://" + path;
+                    using (UnityWebRequest background_www = UnityWebRequestTexture.GetTexture(background_url))
+                    {
+                        yield return www.SendWebRequest();
+
+                        if (www.result != UnityWebRequest.Result.Success)
+                        {
+                        }
+                        else
+                        {
+                            Texture2D tex = DownloadHandlerTexture.GetContent(background_www);
+                            backgroundImageRI.texture = tex;
+                        }
+                    }
+                }
+
+                yield return new WaitForEndOfFrame();
+
                 for (int i = 0; i < totalFrames; i++)
                 {
-                    yield return new WaitForEndOfFrame();
-
                     float currentAudioTime = frameCount / (float)frameRate;
+                    currentTime = currentAudioTime;
 
                     // --- Apply visual effects based on project ---
-                    // Set background, logo, effects, partials, lyrics, screen shake
-                    // Example:
-                    // UpdateBackground(project, currentAudioTime);
-                    // UpdateLogo(project, currentAudioTime);
-                    // UpdateLyrics(project.lyrics, currentAudioTime);
+                    // UpdateIcons(project);
+                    #region UpdateLyrics
+                    //Get all Lyrics that should be on display
+                    List<LyricLine> currentLyricsLines = project.lyrics.FindAll(x => x.WithinTime(currentTime));
+
+                    //Display spawn any that isnt already
+                    foreach (LyricLine l in currentLyricsLines)
+                    {
+                        bool exists = false;
+
+                        for (int il = lyricHolder.childCount - 1; il >= 0; il--)
+                        {
+                            Transform ch = lyricHolder.GetChild(il);
+
+                            if (ch != null)
+                            {
+                                if (ch.gameObject.TryGetComponent<WordManager>(out var cL))
+                                {
+                                    if (cL.lyricLine == l)
+                                    {
+                                        exists = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!exists)
+                        {
+                            GameObject go = Instantiate(audioManager.wordDisplay, lyricHolder);
+
+                            WordManager wm = go.GetComponent<WordManager>();
+                            if (wm != null)
+                            {
+                                wm.lyricLine = l;
+                                wm.capture = this;
+                            }
+                        }
+                    }
+                    #endregion
                     // ApplyScreenShake(project, currentAudioTime);
                     // UpdateAudioPartials(project, currentAudioTime);
 
+
+                    yield return new WaitForEndOfFrame();
                     // Capture frame
                     RenderTexture rt = new RenderTexture(width, height, 24);
                     captureCamera.targetTexture = rt;
                     Texture2D tex = new Texture2D(width, height, TextureFormat.RGB24, false);
                     captureCamera.Render();
                     RenderTexture.active = rt;
-                    tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                    tex.ReadPixels(new Rect(50, 1, 869.1725f, 488.9095f), 0, 0);
                     tex.Apply();
 
                     string frameFile = Path.Combine(framesPath, $"frame_{frameCount:D06}.png");
@@ -100,6 +172,7 @@ public class VisualizerRecorder : MonoBehaviour
                     Destroy(tex);
 
                     frameCount++;
+                    yield return new WaitForEndOfFrame();
                 }
 
                 Time.captureFramerate = 0;

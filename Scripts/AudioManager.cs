@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -37,7 +38,6 @@ public class AudioManager : MonoBehaviour
     Texture backgroundImage;
     public RawImage backgroundImageRI;
     public InputField titleName;
-    public Text titleText;
     public Image playHandle;
     public Image playFillBar;
 
@@ -77,7 +77,8 @@ public class AudioManager : MonoBehaviour
 
     [HideInInspector]
     public List<GameObject> unclickables = new List<GameObject>();
-    
+
+    public GameObject captureObj;
 
     void Awake()
     {
@@ -333,8 +334,6 @@ public class AudioManager : MonoBehaviour
             backgroundImageRI.texture = backgroundImage;
         }
 
-        titleText.text = cP.title;
-
         playHandle.color = (autoLyricAddMode) ? autoLyricColor : sliderColor;
         playFillBar.color = (autoLyricAddMode) ? autoLyricColor : sliderColor;
     }
@@ -365,7 +364,19 @@ public class AudioManager : MonoBehaviour
     {
         if (CurrentProject(out VisualizerProject cP))
         {
-            cP.title = titleName.text;
+            LyricLine lL = cP.lyrics.Find(x => x.title == true);
+            if(lL != null)
+            {
+                lL.text = titleName.text;
+            }
+            else
+            {
+                lL = new LyricLine(0,100,new Vector2(-235, 121.2f),new Vector2(500,100));
+                lL.length = 9999999999;
+                lL.text = titleName.text;
+                lL.title = true;
+                cP.lyrics.Add(lL);
+            }
         }
     }
 
@@ -773,9 +784,10 @@ public class AudioManager : MonoBehaviour
                 projectName.text = cP.project;
             }
 
-            if (cP.title != null)
+            LyricLine titleLine = cP.lyrics.Find(x=> x.title);
+            if (titleLine != null)
             {
-                titleName.text = cP.title;
+                titleName.text = titleLine.text;
             }
 
             if (cP.lyrics.Count > 0)
@@ -878,6 +890,20 @@ public class AudioManager : MonoBehaviour
                     currentMenu = changeTo;
                 }
             break;
+        }
+    }
+
+    public void ExportVideo()
+    {
+        if (CurrentProject(out VisualizerProject cP))
+        {
+            GameObject go = Instantiate(captureObj, new Vector3(1000, 1000, 1000), Quaternion.identity);
+            VideoCapture videoCapture = go.GetComponent<VideoCapture>();
+
+            if (videoCapture != null)
+            {
+                videoCapture.StartRecording(cP);
+            }
         }
     }
 }

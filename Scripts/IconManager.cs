@@ -9,6 +9,7 @@ public class IconManager : MonoBehaviour
     Shadow shadow;
 
     AudioManager audioManager;
+    public VideoCapture capture;
     public TexturePrint texturePrint;
     MouseOverRectTransformPosition mO;
     DragWindow dragWindow;
@@ -44,21 +45,40 @@ public class IconManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        image.raycastTarget = !audioManager.unclickables.Contains(gameObject);
-        if (texturePrint.WithinTime(audioManager.audioSource.time))
+        if (capture != null)
         {
-            if (texturePrint.image != null && image.texture == null)
+            if (texturePrint.WithinTime(capture.currentTime))
             {
-                image.texture = texturePrint.image;
-            }
+                if (texturePrint.image != null && image.texture == null)
+                {
+                    image.texture = texturePrint.image;
+                }
 
-            Selecting();
-            PositioningAndLyrics();
+                PositioningAndLyrics();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
         else
         {
-            Destroy(gameObject);
-        }
+            image.raycastTarget = !audioManager.unclickables.Contains(gameObject);
+            if (texturePrint.WithinTime(audioManager.audioSource.time))
+            {
+                if (texturePrint.image != null && image.texture == null)
+                {
+                    image.texture = texturePrint.image;
+                }
+
+                Selecting();
+                PositioningAndLyrics();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }        
     }
 
     void Selecting()

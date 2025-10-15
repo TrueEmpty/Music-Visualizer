@@ -11,7 +11,6 @@ public class VisualizerProject
     public string backgroundPath = "";
     public string logoPath;
     public string backgroundEffect;
-    public string title;
     public List<LyricLine> lyrics = new List<LyricLine>();
 
     public List<TexturePrint> textures = new List<TexturePrint>();
@@ -27,6 +26,8 @@ public class LyricLine
     public Vector2 position; //X and Y position from bottom left based on a 802.56 , 451.44 background
     public Vector2 size = new Vector2(100,50); //Width and Height based on a 802.56 , 451.44 background
     public int order; //What order to draw in
+    public bool title = false;
+    public bool authurs = false;
 
     public LyricLine()
     {
