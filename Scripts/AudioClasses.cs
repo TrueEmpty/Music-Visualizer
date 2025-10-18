@@ -14,6 +14,7 @@ public class VisualizerProject
     public List<LyricLine> lyrics = new List<LyricLine>();
 
     public List<TexturePrint> textures = new List<TexturePrint>();
+    public CaptureManager exportingObj = null;
 }
 
 [System.Serializable]

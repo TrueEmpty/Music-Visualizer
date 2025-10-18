@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 124093b858b49c7428de5f87ed4f3943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  capture: {fileID: 0}
   lyricLine:
     time: 0
     length: 0
@@ -76,6 +77,8 @@ MonoBehaviour:
     position: {x: 0, y: 0}
     size: {x: 0, y: 0}
     order: 0
+    title: 0
+    authurs: 0
 --- !u!114 &8666159251282766977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,7 +171,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleIndentRangePercentX: 0.05
   scaleIndentRangePercentY: 0.05
-  halfUpdate: 0
+  scalingMode: 0
+  draggingMode: 0
+  directionalScaling: 1
+  halfUpdateX: 0
+  halfUpdateY: 0
+  inverseX: 0
+  inverseY: 0
+  lockHoizontal: 0
+  lockVertical: 0
+  flipXScaleDir: 0
+  flipYScaleDir: 0
 --- !u!114 &456988442902363449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,6 +202,8 @@ MonoBehaviour:
   canDrag: 0
   startPoint: {x: 0, y: 0, z: 0}
   startPos: {x: 0, y: 0, z: 0}
+  lockHoizontal: 0
+  lockVertical: 0
 --- !u!114 &5526125674426942818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,7 +220,15 @@ MonoBehaviour:
   mouseOver: 0
   dragging: 0
   canDrag: 1
+  dragFromTop: 1
+  dragFromRight: 1
+  dragFromBot: 1
+  dragFromLeft: 1
+  lockHoizontal: 0
+  lockVertical: 0
+  positionStable: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
   startPoint: {x: 0, y: 0, z: 0}
+  startSize: {x: 0, y: 0}
   startPos: {x: 0, y: 0, z: 0}
 --- !u!114 &8825826054528252451
 MonoBehaviour:
@@ -221,6 +244,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localPoint: {x: 0, y: 0}
   isMouseOver: 0
+  offset: {x: 0, y: 0}
+  pointGrabbed:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
 --- !u!1 &1012924088955733220
 GameObject:
   m_ObjectHideFlags: 0

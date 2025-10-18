@@ -38,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 50, y: -1}
-  m_SizeDelta: {x: 869.1725, y: 488.90955}
+  m_SizeDelta: {x: 869, y: 489}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &4053276486478368172
 CanvasRenderer:
@@ -293,22 +293,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c85033fe8e2b45f4dac2b2ae4a1cd7de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  captureManager: {fileID: 0}
   captureCamera: {fileID: 7142434759072314390}
   width: 1920
   height: 1080
   frameRate: 60
-  speedupFactor: 4
-  project:
-    project: 
-    audioName: 
-    fullPath: 
-    audioPath: 
-    backgroundPath: 
-    logoPath: 
-    backgroundEffect: 
-    lyrics: []
-    textures: []
+  cropX: 50
+  cropY: 1
+  cropWidth: 869
+  cropHeight: 489
+  projectNameOut: 
   currentTime: 0
+  totalLength: -1
   backgroundImageRI: {fileID: 6354544098762016381}
   lyricHolder: {fileID: 6279264558933490031}
   texturesHolder: {fileID: 7384016263921546058}
@@ -491,6 +487,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8875021106180664251}
+  - component: {fileID: 102070360446872271}
   m_Layer: 0
   m_Name: Capture
   m_TagString: Untagged
@@ -515,3 +512,18 @@ Transform:
   - {fileID: 7146577823043726446}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &102070360446872271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8670563535273817989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e5ae0c817f234a48aa58747f7f95d53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  capture: {fileID: 9012344887354126189}
+  current: 0
+  total: -1

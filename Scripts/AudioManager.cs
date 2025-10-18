@@ -75,6 +75,12 @@ public class AudioManager : MonoBehaviour
     public Color autoLyricColor;
     public Color sliderColor;
 
+
+    [Header("Export Info")]
+    public Text exportButtonText;
+    public Image exportButtonFill;
+
+
     [HideInInspector]
     public List<GameObject> unclickables = new List<GameObject>();
 
@@ -336,6 +342,25 @@ public class AudioManager : MonoBehaviour
 
         playHandle.color = (autoLyricAddMode) ? autoLyricColor : sliderColor;
         playFillBar.color = (autoLyricAddMode) ? autoLyricColor : sliderColor;
+
+        if(cP.exportingObj != null)
+        {
+            CaptureManager cM = cP.exportingObj;
+
+            exportButtonFill.fillAmount = cM.current/cM.total;
+
+            float percent = (cM.current / cM.total) * 100f;
+            exportButtonText.text = (cM.current / cM.total < 0.99f)
+                ? $"Exporting... {percent:F2}%"
+                : "Finalizing!";
+            exportButtonText.color = Color.red;
+        }
+        else
+        {
+            exportButtonText.text = "Export Video";
+            exportButtonText.color = borderColor;
+            exportButtonFill.fillAmount = 0;
+        }
     }
 
     public bool CurrentProject(out VisualizerProject cP)
@@ -897,12 +922,16 @@ public class AudioManager : MonoBehaviour
     {
         if (CurrentProject(out VisualizerProject cP))
         {
-            GameObject go = Instantiate(captureObj, new Vector3(1000, 1000, 1000), Quaternion.identity);
-            VideoCapture videoCapture = go.GetComponent<VideoCapture>();
-
-            if (videoCapture != null)
+            if(cP.exportingObj == null)
             {
-                videoCapture.StartRecording(cP);
+                GameObject go = Instantiate(captureObj, new Vector3(1000, 1000, 1000), Quaternion.identity);
+                CaptureManager videoCapture = go.GetComponent<CaptureManager>();
+
+                if (videoCapture != null)
+                {
+                    cP.exportingObj = videoCapture;
+                    videoCapture.StartRecording(cP);
+                }
             }
         }
     }
