@@ -175,13 +175,33 @@ public class VideoCapture : MonoBehaviour
                     tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
                     tex.Apply();
 
-                    string frameFile = Path.Combine(framesPath, $"frame_{frameCount:D06}.png");
-                    File.WriteAllBytes(frameFile, tex.EncodeToPNG());
+                    // ✅ Crop texture in Unity (bottom-left origin)
+                    Color[] croppedPixels = tex.GetPixels(cropX, cropY, cropWidth, cropHeight);
+                    Texture2D croppedTex = new Texture2D(cropWidth, cropHeight, TextureFormat.RGB24, false);
+                    croppedTex.SetPixels(croppedPixels);
+                    croppedTex.Apply();
 
+                    // ✅ Scale cropped texture to 1920x1080 using RenderTexture (reliable scaling)
+                    RenderTexture scaleRT = new RenderTexture(1920, 1080, 0);
+                    Graphics.Blit(croppedTex, scaleRT);
+
+                    RenderTexture.active = scaleRT;
+                    Texture2D finalTex = new Texture2D(1920, 1080, TextureFormat.RGB24, false);
+                    finalTex.ReadPixels(new Rect(0, 0, 1920, 1080), 0, 0);
+                    finalTex.Apply();
+
+                    // ✅ Save final scaled frame
+                    string frameFile = Path.Combine(framesPath, $"frame_{frameCount:D06}.png");
+                    File.WriteAllBytes(frameFile, finalTex.EncodeToPNG());
+
+                    // Cleanup
                     captureCamera.targetTexture = null;
                     RenderTexture.active = null;
                     Destroy(rt);
                     Destroy(tex);
+                    Destroy(croppedTex);
+                    Destroy(finalTex);
+                    Destroy(scaleRT);
 
                     frameCount++;
                     yield return new WaitForEndOfFrame();
@@ -229,7 +249,7 @@ public class VideoCapture : MonoBehaviour
         string args =
             $"-y -framerate {frameRate} -i \"{framesPath}/frame_%06d.png\" " +
             $"-i \"{audioPath}\" " +
-            $"-filter:v \"crop={cropWidth}:{cropHeight}:{cropX}:{cropY},scale=1920:1080\" " +
+            $"-filter:v \"scale=1920:1080\" " +
             $"-c:v libx264 -pix_fmt yuv420p -r {frameRate} " +
             $"-c:a aac -b:a 320k -shortest \"{outputFile}\"";
 
