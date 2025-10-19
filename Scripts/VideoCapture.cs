@@ -263,5 +263,6 @@ public class VideoCapture : MonoBehaviour
         ffmpeg.Start();
         ffmpeg.BeginOutputReadLine();
         ffmpeg.BeginErrorReadLine();
+        Destroy(gameObject);
     }
 }

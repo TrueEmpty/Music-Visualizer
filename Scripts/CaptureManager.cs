@@ -31,6 +31,5 @@ public class CaptureManager : MonoBehaviour
         Debug.Log("Completed exporting (" + projectName + ")");
         Debug.Log("Output Path (" + outputFile + ")");
 
-        Destroy(gameObject);
     }
 }
