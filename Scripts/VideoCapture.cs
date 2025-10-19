@@ -22,7 +22,7 @@ public class VideoCapture : MonoBehaviour
     int cropX = 104;
     int cropY = 2;
     int cropWidth = 1805;
-    int cropHeight = 1016;
+    int cropHeight = 1078; //1016;
 
     private string framesPath;
     private string outputPath;
