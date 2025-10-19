@@ -41,6 +41,8 @@ public class WordManager : MonoBehaviour
     {
         if (capture != null)
         {
+            border.enabled = false;
+            
             if (lyricLine.WithinTime(capture.currentTime))
             {
                 PositioningAndLyrics();

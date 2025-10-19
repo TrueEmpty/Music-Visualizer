@@ -31,22 +31,6 @@ public class CaptureManager : MonoBehaviour
         Debug.Log("Completed exporting (" + projectName + ")");
         Debug.Log("Output Path (" + outputFile + ")");
 
-        Invoke(nameof(DestroyThis), 5);
-
-        // Open folder in File Explorer
-        try
-        {
-            System.Diagnostics.Process.Start("explorer.exe", "/select,\"" + outputFile + "\"");
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogWarning("Failed to open file in Explorer: " + ex.Message);
-            Application.OpenURL(System.IO.Path.GetDirectoryName(outputFile));
-        }
-    }
-
-    void DestroyThis()
-    {
         Destroy(gameObject);
     }
 }

@@ -19,10 +19,10 @@ public class VideoCapture : MonoBehaviour
 
     // Crop region (pixel coordinates relative to source frames)
     // Adjust these for your display area:
-    public int cropX = 50;
-    public int cropY = 1;
-    public int cropWidth = 869;
-    public int cropHeight = 489;
+    int cropX = 104;
+    int cropY = 2;
+    int cropWidth = 1805;
+    int cropHeight = 1016;
 
     private string framesPath;
     private string outputPath;
@@ -140,6 +140,7 @@ public class VideoCapture : MonoBehaviour
                                 {
                                     if (cL.lyricLine == l)
                                     {
+                                        cL.capture = this;
                                         exists = true;
                                         break;
                                     }
