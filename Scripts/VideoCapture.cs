@@ -19,11 +19,10 @@ public class VideoCapture : MonoBehaviour
 
     // Crop region (pixel coordinates relative to source frames)
     // Adjust these for your display area:
-    int cropX = 104;
-    int cropY = 2;
+    int cropX = 0;
+    int cropY = 61;
     int cropWidth = 1805;
-    int cropHeight = 1078; //1016;
-
+    int cropHeight = 1018;
     private string framesPath;
     private string outputPath;
     private string currentPath;

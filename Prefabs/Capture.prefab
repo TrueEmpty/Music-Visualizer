@@ -37,8 +37,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -1}
-  m_SizeDelta: {x: 869, y: 489}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 869, y: 490.408}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &4053276486478368172
 CanvasRenderer:
@@ -298,10 +298,6 @@ MonoBehaviour:
   width: 1920
   height: 1080
   frameRate: 60
-  cropX: 50
-  cropY: 1
-  cropWidth: 869
-  cropHeight: 489
   projectNameOut: 
   currentTime: 0
   totalLength: -1
